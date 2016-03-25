@@ -1,4 +1,6 @@
 INCLUDE(FindBoost)
+#Some versions of CMAKE don't search for Boost 1.60
+SET (Boost_ADDITIONAL_VERSIONS 1.60.0 1.60)
 SET (Boost_USE_STATIC_LIBS ON)
 SET (Boost_USE_MULTITHREADED ON)
 SET (Boost_USE_STATIC_RUNTIME OFF)
