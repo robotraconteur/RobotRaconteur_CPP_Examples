@@ -9,10 +9,10 @@ add_executable(SimpleWebcamService
 	experimental__createwebcam_stubskel.cpp
 	SimpleWebcamService.cpp)
 
-target_link_libraries(SimpleWebcamService RobotRaconteur2 ${Boost_LIBRARIES} ${OpenCV_LIBS} ${ROBOTRACONTEUR_EXTRA_LIBS} )
+target_link_libraries(SimpleWebcamService ${RobotRaconteur_LIBRARY} ${Boost_LIBRARIES} ${OpenCV_LIBS} ${ROBOTRACONTEUR_EXTRA_LIBS} )
 
 add_executable(SimpleWebcamService_broadcaster
 	experimental__createwebcam_stubskel.cpp
 	SimpleWebcamService_broadcaster.cpp)
 
-target_link_libraries(SimpleWebcamService_broadcaster RobotRaconteur2 ${Boost_LIBRARIES} ${OpenCV_LIBS} ${ROBOTRACONTEUR_EXTRA_LIBS} )
+target_link_libraries(SimpleWebcamService_broadcaster ${RobotRaconteur_LIBRARY} ${Boost_LIBRARIES} ${OpenCV_LIBS} ${ROBOTRACONTEUR_EXTRA_LIBS} )
