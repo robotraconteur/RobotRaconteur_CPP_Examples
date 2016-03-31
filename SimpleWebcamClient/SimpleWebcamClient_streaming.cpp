@@ -32,7 +32,10 @@ void new_frame(boost::shared_ptr<PipeEndpoint<boost::shared_ptr<WebcamImage> > >
 	while (pipe_ep->Available() > 0)
 	{
 		boost::shared_ptr<WebcamImage> image=pipe_ep->ReceivePacket();
-		current_frame=WebcamImageToMat(image);
+		if (image->data)
+		{
+			current_frame = WebcamImageToMat(image);
+		}
 
 	}
 }
@@ -71,8 +74,15 @@ int main(int argc, char* argv[])
 		//Show a named window
 		namedWindow("Image");
 
-		//Start streaming image packets
-		c1->StartStreaming();
+		try
+		{
+			//Start streaming image packets
+			c1->StartStreaming();
+		}
+		catch (std::exception&)
+		{
+
+		}
 
 		//Loop through and show the new image if available
 		while (true)

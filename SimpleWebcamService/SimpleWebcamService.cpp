@@ -86,6 +86,7 @@ void Webcam_impl::Shutdown()
 	{		
 		camopen=false;
 	}
+	streaming = false;
 }
 Webcam_impl::~Webcam_impl()
 {

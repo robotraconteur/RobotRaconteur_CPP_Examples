@@ -86,6 +86,7 @@ void Webcam_impl::Shutdown()
 	{		
 		camopen=false;
 	}
+	streaming = false;
 }
 Webcam_impl::~Webcam_impl()
 {
@@ -204,11 +205,21 @@ void Webcam_impl::frame_threadfunc()
 	while(streaming)
 	{
 		{
-			boost::shared_ptr<WebcamImage> frame = CaptureFrame();
-
 			//Capture a frame
-			recursive_mutex::scoped_lock lock(global_lock);
-			m_FrameStreamBroadcaster->AsyncSendPacket(frame, async_frame_send_handler);
+			boost::shared_ptr<WebcamImage> frame = CaptureFrame();
+			
+			try
+			{
+				recursive_mutex::scoped_lock lock(global_lock);
+				m_FrameStreamBroadcaster->AsyncSendPacket(frame, async_frame_send_handler);
+			}
+			catch (std::exception&)
+			{
+				if (streaming)
+				{
+				cout << "warning: error sending frame" << endl;
+				}
+			}
 
 		}
 				
