@@ -7,7 +7,7 @@ find_package(Boost COMPONENTS date_time filesystem system regex chrono atomic th
 add_definitions(-DBOOST_ALL_NO_LIB)
 
 if(CMAKE_COMPILER_IS_GNUCXX)	
-	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ssl crypto pthread rt z)	
+	set (RobotRaconteur_EXTRA_LIBRARIES ${RobotRaconteur_EXTRA_LIBRARIES} ssl crypto pthread rt z)	
 endif()
 
 if(CMAKE_GENERATOR STREQUAL Xcode)
@@ -17,7 +17,7 @@ if(CMAKE_GENERATOR STREQUAL Xcode)
 	CMAKE_FIND_FRAMEWORKS(CoreFoundation)
 	CMAKE_FIND_FRAMEWORKS(Security)
 	include_directories(${CoreFoundation_FRAMEWORKS}/Headers ${Security_FRAMEWORKS}/Headers)
-	set (ROBOTRACONTEUR_EXTRA_LIBS ${ROBOTRACONTEUR_EXTRA_LIBS} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security ssl crypto c++)
+	set (RobotRaconteur_EXTRA_LIBRARIES ${RobotRaconteur_EXTRA_LIBRARIES} ${CoreFoundation_FRAMEWORKS}/CoreFoundation ${Security_FRAMEWORKS}/Security ssl crypto c++)
 endif()
 
 include_directories(${Boost_INCLUDE_DIRS})
