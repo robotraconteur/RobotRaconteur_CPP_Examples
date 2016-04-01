@@ -7,10 +7,10 @@ add_executable(iRobotCreateClient
 	experimental__create_stubskel.cpp
 	iRobotCreateClient.cpp)
 
-target_link_libraries(iRobotCreateClient ${RobotRaconteur_LIBRARY} ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS} )
+target_link_libraries(iRobotCreateClient ${RobotRaconteur_LIBRARY} ${Boost_LIBRARIES} ${RobotRaconteur_EXTRA_LIBS} )
 
 add_executable(FindiRobotCreateServiceNode
 	experimental__create_stubskel.cpp
 	FindiRobotCreateServiceNode.cpp)
 
-target_link_libraries(FindiRobotCreateServiceNode ${RobotRaconteur_LIBRARY} ${Boost_LIBRARIES} ${ROBOTRACONTEUR_EXTRA_LIBS} )
+target_link_libraries(FindiRobotCreateServiceNode ${RobotRaconteur_LIBRARY} ${Boost_LIBRARIES} ${RobotRaconteur_EXTRA_LIBS} )
