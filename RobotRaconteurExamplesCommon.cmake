@@ -22,7 +22,7 @@ endif()
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(RobotRaconteur)
+find_package(RobotRaconteur REQUIRED)
 #set(RobotRaconteur_INCLUDE_DIR "" CACHE PATH "Robot Raconteur include path")
 #set(RobotRaconteur_LIB_DIR "" CACHE PATH "Robot Raconteur lib path")
 
