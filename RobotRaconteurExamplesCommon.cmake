@@ -26,5 +26,5 @@ endif()
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(RobotRaconteur)
+find_package(RobotRaconteur REQUIRED)
 
