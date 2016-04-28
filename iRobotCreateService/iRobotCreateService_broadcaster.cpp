@@ -23,6 +23,17 @@ int main(int argc, char* argv[])
 
 	//Initialize the TCP transport and start listenin on port 2354
 	boost::shared_ptr<TcpTransport> t=boost::make_shared<TcpTransport>();
+	
+	//Attempt to load a TLS certificate
+	try
+	{
+		t->LoadTlsNodeCertificate();
+	}
+	catch (std::exception&)
+	{
+		cout << "warning: could not load TLS certificate" << endl;
+	}
+	
 	t->StartServer(2354);
 
 	//Enable auto-discovery announcement
