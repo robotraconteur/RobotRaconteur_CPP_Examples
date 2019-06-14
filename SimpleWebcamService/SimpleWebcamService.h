@@ -1,6 +1,5 @@
 #include <RobotRaconteur.h>
-#include "experimental__createwebcam.h"
-#include "experimental__createwebcam_stubskel.h"
+#include "robotraconteur_generated.h"
 
 #include <opencv2/highgui/highgui.hpp>
 
@@ -14,11 +13,11 @@ using namespace std;
 using namespace cv;
 using namespace boost;
 using namespace RobotRaconteur;
-using namespace experimental::createwebcam;
+using namespace ::experimental::createwebcam2;
 
 //Class to implement the "Webcam" object abstract class
 //and also use "enable_shared_from_this" for shared_ptr support
-class Webcam_impl : public Webcam, public boost::enable_shared_from_this<Webcam_impl>
+class Webcam_impl : public Webcam_default_impl, public boost::enable_shared_from_this<Webcam_impl>
 {
 public:
 
@@ -26,41 +25,32 @@ public:
 	void Shutdown();
 	~Webcam_impl();
 
+	virtual std::string get_Name();	
 
-	virtual std::string get_Name();
-	virtual void set_Name(std::string value);
-
-	virtual RR_SHARED_PTR<WebcamImage > CaptureFrame();
+	virtual WebcamImagePtr CaptureFrame();
 
 	virtual void StartStreaming();
 
 	virtual void StopStreaming();
 
-	virtual RR_SHARED_PTR<WebcamImage_size > CaptureFrameToBuffer();
+	virtual WebcamImage_sizePtr CaptureFrameToBuffer();
+	
+	virtual ArrayMemoryPtr<uint8_t> get_buffer();
 
-	virtual RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<WebcamImage > > > get_FrameStream();
-	virtual void set_FrameStream(RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<WebcamImage > > > value);
+	virtual MultiDimArrayMemoryPtr<uint8_t> get_multidimbuffer();
 
-	virtual RR_SHARED_PTR<RobotRaconteur::ArrayMemory<uint8_t > > get_buffer();
-
-	virtual RR_SHARED_PTR<RobotRaconteur::MultiDimArrayMemory<uint8_t > > get_multidimbuffer();
+	virtual void set_FrameStream(PipePtr<WebcamImagePtr> value);
 
 private:
-	boost::shared_ptr<RRArray<uint8_t> > m_buffer;
-	boost::shared_ptr<RRMultiDimArray<uint8_t> > m_multidimbuffer;
+	RRArrayPtr<uint8_t> m_buffer;
+	RRMultiDimArrayPtr<uint8_t> m_multidimbuffer;
 	RR_SHARED_PTR<VideoCapture> capture;
-
-	RR_SHARED_PTR<RobotRaconteur::Pipe<RR_SHARED_PTR<WebcamImage > > > m_FrameStream;
+	
 	bool camopen;
-	string m_Name;
-	map<uint32_t,map<int32_t,boost::shared_ptr<PipeEndpoint<boost::shared_ptr<WebcamImage> > > > > framestream_endpoints;
-	void FrameStream_pipeconnect(boost::shared_ptr<PipeEndpoint<boost::shared_ptr<WebcamImage> > > pipe_ep);
-	void FrameStream_pipeclosed(boost::shared_ptr<PipeEndpoint<boost::shared_ptr<WebcamImage> > > pipe_ep);
+	string m_Name;	
+	TimerPtr streaming_timer;
 
-	bool streaming;
-	void frame_threadfunc();
-
-
+	void send_frame_stream();
 };
 
 class Webcam_name
@@ -79,8 +69,7 @@ public:
 	~WebcamHost_impl();
 	void Shutdown();
 
-	virtual RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > get_WebcamNames();
-	virtual void set_WebcamNames(RR_SHARED_PTR<RobotRaconteur::RRMap<int32_t,RobotRaconteur::RRArray<char>  > > value);
+	virtual RRMapPtr<int32_t,RRArray<char> > get_WebcamNames();
 
 	virtual RR_SHARED_PTR<Webcam > get_Webcams(int32_t ind);
 private:
@@ -90,4 +79,4 @@ private:
 
 
 //Global lock to protect from multi-threaded calls
-extern recursive_mutex global_lock;
+extern boost::recursive_mutex global_lock;

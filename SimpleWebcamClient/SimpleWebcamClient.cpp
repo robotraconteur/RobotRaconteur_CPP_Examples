@@ -1,7 +1,6 @@
 
 #include <RobotRaconteur.h>
-#include "experimental__createwebcam.h"
-#include "experimental__createwebcam_stubskel.h"
+#include "robotraconteur_generated.h"
 
 #include <opencv2/highgui/highgui.hpp>
 
@@ -9,16 +8,16 @@ using namespace RobotRaconteur;
 using namespace std;
 using namespace boost;
 using namespace cv;
-using namespace experimental::createwebcam;
+using namespace ::experimental::createwebcam2;
 
 //Simple client to read images from a Webcam server
 //and display the images
 
 //Convert WebcamImage to OpenCV format
-Mat WebcamImageToMat(boost::shared_ptr<WebcamImage> image)
+Mat WebcamImageToMat(WebcamImagePtr image)
 {
 	Mat frame2(image->height, image->width, CV_8UC3);
-	memcpy(frame2.data,image->data->ptr(),image->data->Length());
+	memcpy(frame2.data,&image->data->at(0),image->data->size());
 	return frame2;
 }
 
@@ -31,19 +30,15 @@ int main(int argc, char* argv[])
 	}
 
 	try
-	{
-		//Register a TCP transport
-		boost::shared_ptr<TcpTransport> t=boost::make_shared<TcpTransport>();
-		RobotRaconteurNode::s()->RegisterTransport(t);
-		 //Register the service type
-		RobotRaconteurNode::s()->RegisterServiceType(boost::make_shared<experimental__createwebcamFactory>());
+	{		
+		//Use node setup to help initialize client node
+		ClientNodeSetup node_setup(ROBOTRACONTEUR_SERVICE_TYPES);
 
-		//Connect to the service
-		boost::shared_ptr<WebcamHost> c_host=rr_cast<WebcamHost>(RobotRaconteurNode::s()->ConnectService(string(argv[1]),"",boost::shared_ptr<RRMap<std::string,RRObject> >(),NULL,"experimental.createwebcam.WebcamHost"));
+		WebcamHostPtr c_host=rr_cast<WebcamHost>(RobotRaconteurNode::s()->ConnectService(string(argv[1]),"",RRMapPtr<std::string,RRValue>(),NULL,"experimental.createwebcam2.WebcamHost"));
 
 		//Get the Webcam objects from the "Webcams" objref
-		boost::shared_ptr<Webcam> c1=c_host->get_Webcams(0);
-		boost::shared_ptr<Webcam> c2=c_host->get_Webcams(1);
+		WebcamPtr c1=c_host->get_Webcams(0);
+		WebcamPtr c2=c_host->get_Webcams(1);
 
 		//Capture an image and convert to OpenCV image type
 		Mat frame1=WebcamImageToMat(c1->CaptureFrame());
@@ -58,12 +53,8 @@ int main(int argc, char* argv[])
 		
 		//Close the image viewers
 		destroyAllWindows();
-
-		//Shutdown Robot Raconteur
-		RobotRaconteurNode::s()->Shutdown();
-
+		
 		return 0;
-
 	}
 	catch (std::exception& e)
 	{
